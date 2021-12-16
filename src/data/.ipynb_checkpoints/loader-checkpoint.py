@@ -336,21 +336,21 @@ def check_data_params(params):
 
     # check monolingual datasets
     required_mono = set([l1 for l1, l2 in (params.mlm_steps + params.clm_steps) if l2 is None] + params.ae_steps + params.bt_src_langs + params.mass_steps)
-    print("Required_mono: ", required_mono)
+    #print("Required_mono: ", required_mono)
     params.mono_dataset = {
         lang: {
             splt: os.path.join(params.data_path, '%s.%s.pth' % (splt, lang))
             for splt in ['train', 'valid', 'test']
         } for lang in params.langs if lang in required_mono
     }
-    print(params.mono_dataset)
+    #print(params.mono_dataset)
     assert all([all([os.path.isfile(p) for p in paths.values()]) for paths in params.mono_dataset.values()])
 
     # check parallel datasets
     required_para_train = set(params.clm_steps + params.mlm_steps + params.pc_steps + params.mt_steps)
     required_para = required_para_train | set([(l2, l3) for _, l2, l3 in params.bt_steps] + mass_steps)
-    print("required_para_train", required_para_train)
-    print("required_para", required_para)
+    #print("required_para_train", required_para_train)
+    #print("required_para", required_para)
     params.para_dataset = {
         (src, tgt): {
             splt: (os.path.join(params.data_path, '%s.%s-%s.%s.pth' % (splt, src, tgt, src)),
@@ -360,9 +360,9 @@ def check_data_params(params):
         } for src in params.langs for tgt in params.langs
         if ((src, tgt) in required_para or (tgt, src) in required_para) and (src < tgt)
     }
-    print(params.langs)
-    print(params.para_dataset)
-    print(all([all([os.path.isfile(p1) and os.path.isfile(p2) for p1, p2 in paths.values()]) for paths in params.para_dataset.values()]))
+    #print(params.langs)
+    #print(params.para_dataset)
+    #print(all([all([os.path.isfile(p1) and os.path.isfile(p2) for p1, p2 in paths.values()]) for paths in params.para_dataset.values()]))
     assert all([all([os.path.isfile(p1) and os.path.isfile(p2) for p1, p2 in paths.values()]) for paths in params.para_dataset.values()])
     
     # back parallel datasets

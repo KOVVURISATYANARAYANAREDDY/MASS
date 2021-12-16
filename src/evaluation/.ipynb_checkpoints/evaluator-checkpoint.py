@@ -449,6 +449,7 @@ class EncDecEvaluator(Evaluator):
         """
         Evaluate perplexity and next word prediction accuracy.
         """
+        print("Evaluate_mt: data_set, lang1, lang2, eval_bleu: ", data_set, lang1, lang2, eval_bleu)
         params = self.params
         assert data_set in ['valid', 'test']
         assert lang1 in params.langs
@@ -470,11 +471,14 @@ class EncDecEvaluator(Evaluator):
         # store hypothesis to compute BLEU score
         if eval_bleu:
             hypothesis = []
-
+        flag = True
         for batch in self.get_iterator(data_set, lang1, lang2):
 
             # generate batch
             (x1, len1), (x2, len2) = batch
+            if flag:
+                print("(x1, len1), (x2, len2): ", (x1, len1), (x2, len2))
+                flag = False
             langs1 = x1.clone().fill_(lang1_id)
             langs2 = x2.clone().fill_(lang2_id)
 
